@@ -41,9 +41,9 @@ public class WebSecurityConfig {
                                 "/register*/**"
                         )
                         .permitAll()
-                        .requestMatchers("/admin*/**")
+                        .requestMatchers("/api/admin*/**")
                         .hasAuthority("ADMIN")
-                        .requestMatchers("/user*/**")
+                        .requestMatchers("/api/user*/**")
                         .hasAuthority("USER")
                         .anyRequest()
                         .authenticated()

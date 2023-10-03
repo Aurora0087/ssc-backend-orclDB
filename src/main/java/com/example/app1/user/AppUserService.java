@@ -2,6 +2,8 @@ package com.example.app1.user;
 
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -23,11 +25,10 @@ public class AppUserService implements UserDetailsService {
                 .orElseThrow(()->new UsernameNotFoundException("User do not exist."));
     }
 
-    public String signUpUser(AppUser appUser){
-        boolean userExist = appUserRepo.findByEmail(appUser.getEmail()).isPresent();
+    public ResponseEntity<String> signUpUser(AppUser appUser){
 
-        if (userExist){
-           throw new IllegalStateException("user already exits.");
+        if (isUserExist(appUser)){
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("User already exist.");
         }
 
         String encodedPassword = bCryptPasswordEncoder.encode(appUser.getPassword());
@@ -35,7 +36,11 @@ public class AppUserService implements UserDetailsService {
 
         appUserRepo.save(appUser);
 
-        return ("User successfully registered.");
+        return ResponseEntity.status(HttpStatus.OK).body("User registration done.");
+    }
+
+    public Boolean isUserExist(AppUser appUser){
+        return appUserRepo.findByEmail(appUser.getEmail()).isPresent();
     }
 
 }
