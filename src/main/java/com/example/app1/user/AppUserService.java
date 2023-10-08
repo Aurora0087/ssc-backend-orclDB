@@ -25,6 +25,8 @@ public class AppUserService implements UserDetailsService {
                 .orElseThrow(()->new UsernameNotFoundException("User do not exist."));
     }
 
+
+    //User registration
     public ResponseEntity<String> signUpUser(AppUser appUser){
 
         if (isUserExist(appUser)){

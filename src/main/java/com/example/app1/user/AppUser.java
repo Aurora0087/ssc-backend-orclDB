@@ -35,6 +35,7 @@ public class AppUser implements UserDetails{
     private String lastName;
     @Column(nullable = false)
     private String email;
+    @Column(nullable = false)
     private String password;
 
     @Enumerated(EnumType.STRING)
@@ -43,6 +44,7 @@ public class AppUser implements UserDetails{
     private Boolean locked;
     private Boolean enabled;
 
+    //appUser constructor without id
     public AppUser(String firstName, String lastName, String email, String password, UserRole userRole) {
         this.firstName = firstName;
         this.lastName = lastName;

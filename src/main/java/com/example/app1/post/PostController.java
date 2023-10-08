@@ -21,12 +21,11 @@ public class PostController {
     private AppUserRepo userRepo;
     @Autowired
     private FindTeacherService findTeacherService;
-    @Autowired
-    private FindTeacherRepo findTeacherRepo;
 
     @GetMapping(path = "/api/requestlist")
-    public List<FindTeacher> viewAllFindTeacherRequest(){
-        return findTeacherRepo.findAll();
+    public ResponseEntity<List<FindTeacherResponse>> viewAllFindTeacherRequest(){
+
+        return findTeacherService.requestFindTeacher();
     }
 
     @PostMapping(path = "/api/postrequest")

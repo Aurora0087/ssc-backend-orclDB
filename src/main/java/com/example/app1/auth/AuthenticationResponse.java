@@ -13,6 +13,6 @@ import lombok.Setter;
 public class AuthenticationResponse {
     @JsonProperty("message")
     private String message;
-    @JsonProperty("access_token")
+    @JsonProperty("token")
     private String token;
 }
