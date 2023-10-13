@@ -24,7 +24,9 @@ public class WebSecurityConfig {
 
     @Autowired
     private final AppUserService appUserService;
+
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
     @Autowired
     private final JwtAuthFilter jwtAuthFilter;
 
@@ -32,7 +34,7 @@ public class WebSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
         http
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(auth -> auth
+                .authorizeHttpRequests((auth) -> auth
                         .requestMatchers(
                                 "/",
                                 "/error*/**",
@@ -67,7 +69,5 @@ public class WebSecurityConfig {
         provider.setUserDetailsService(appUserService);
         return provider;
     }
-
-
 
 }

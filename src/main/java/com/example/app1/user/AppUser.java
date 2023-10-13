@@ -37,6 +37,7 @@ public class AppUser implements UserDetails{
     private String email;
     @Column(nullable = false)
     private String password;
+    private String profileImage;
 
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
@@ -50,6 +51,7 @@ public class AppUser implements UserDetails{
         this.lastName = lastName;
         this.email = email;
         this.password = password;
+        this.profileImage="https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1";
         this.userRole = userRole;
         this.locked = false;
         this.enabled =true;
