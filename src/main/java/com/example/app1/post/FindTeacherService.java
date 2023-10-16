@@ -21,7 +21,7 @@ public class FindTeacherService {
 
     public ResponseEntity<String> sendPost(FindTeacher findTeacher){
 
-        if (!userService.isUserExist(findTeacher.getAppUser())){
+        if (!userService.isUserExist(findTeacher.getAppUser().getEmail())){
             return ResponseEntity.status(HttpStatus.CONFLICT).body("User already exist.");
         }
 
@@ -47,7 +47,7 @@ public class FindTeacherService {
             UserProfile profile=new UserProfile();
             profile.setFirstName(findTeacher.getAppUser().getFirstName());
             profile.setLastName(findTeacher.getAppUser().getLastName());
-            profile.setProfileImage("https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1");
+            profile.setProfileImage(findTeacher.getAppUser().getProfileImage());
             response.setProfile(profile);
 
             findTeacherResponses.add(response);

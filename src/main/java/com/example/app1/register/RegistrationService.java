@@ -14,6 +14,8 @@ public class RegistrationService {
 
     @Autowired
     private final AppUserService appUserService;
+
+    //registering appUsers as user in database
     public ResponseEntity<String> register(RegistrationRequest request) {
 
         return appUserService.signUpUser(

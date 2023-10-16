@@ -33,7 +33,7 @@ public class FindTeacher {
     private Date postedTime;
 
     @ManyToOne
-    @JoinColumn(name = "appUser_id",nullable = false)
+    @JoinColumn(name = "user_id",nullable = false)
     private AppUser appUser;
 
     public FindTeacher(String heading, String skill, String description, String location, Date postedTime, AppUser appUser) {
