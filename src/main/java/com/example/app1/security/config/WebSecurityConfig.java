@@ -15,6 +15,11 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.reactive.CorsConfigurationSource;
+import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
 
 
 @Configuration
@@ -40,13 +45,15 @@ public class WebSecurityConfig {
                                 "/error*/**",
                                 "/login",
                                 "/auth/**",
-                                "/register*/**"
+                                "/register*/**",
+
+                                "/api/video/**"
                         )
                         .permitAll()
                         .requestMatchers("/api/admin*/**")
                         .hasAuthority("ADMIN")
                         .requestMatchers("/api/user*/**",
-                                "/api/postrequest",
+                                "/api/postrequest*/**",
                                 "/api/requestlist")
                         .hasAuthority("USER")
                         .anyRequest()

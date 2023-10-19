@@ -4,6 +4,7 @@ import com.example.app1.jwt.JwtService;
 import com.example.app1.user.AppUserService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,15 +28,24 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
-        String authHeader = request.getHeader("Authorization");
-
         String token =null;
         String userName =null;
 
-        if (authHeader!=null && authHeader.startsWith("Bearer ")){
+        /*if (authHeader!=null && authHeader.startsWith("Bearer ")){
             token=authHeader.substring(7);
             userName=jwtService.extractUsername(token);
-
+        }*/
+        // Check for the JWT token in an HTTP-only cookie
+        Cookie[] cookies = request.getCookies();
+        System.out.println(cookies);
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("token".equals(cookie.getName())) {
+                    token = cookie.getValue();
+                    userName = jwtService.extractUsername(token);
+                    break;
+                }
+            }
         }
 
         if (userName!=null && SecurityContextHolder.getContext().getAuthentication()==null){

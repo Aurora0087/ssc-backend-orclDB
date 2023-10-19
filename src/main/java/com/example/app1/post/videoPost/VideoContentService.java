@@ -26,7 +26,7 @@ public class VideoContentService {
 
     public String uploadVideo(MultipartFile file) throws IOException {
 
-        String videoService="video/";
+        String videoService="src/main/resources/video";
 
         if (file.isEmpty()){
             return "Please select a file.";
@@ -34,9 +34,9 @@ public class VideoContentService {
 
         String originalFileName = file.getOriginalFilename();
 
-        UUID uid = UUID.randomUUID();
+        String newName = UUID.randomUUID() + originalFileName;
 
-        Path uploadPath = Paths.get(videoService+File.separator+uid+originalFileName);
+        Path uploadPath = Paths.get(videoService+File.separator+newName);
 
         File f=new File(videoService);
         if (!f.exists()){
@@ -45,7 +45,7 @@ public class VideoContentService {
 
         Files.copy(file.getInputStream(),uploadPath);
 
-        return uploadPath.toString();
+        return newName;
     }
 
     public ResponseEntity<String> postVideoContent(VideoContent content){

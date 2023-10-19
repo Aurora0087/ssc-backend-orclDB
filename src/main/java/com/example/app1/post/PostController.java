@@ -4,12 +4,12 @@ import com.example.app1.jwt.JwtService;
 import com.example.app1.post.videoPost.VideoContent;
 import com.example.app1.post.videoPost.VideoContentResponse;
 import com.example.app1.post.videoPost.VideoContentService;
-import com.example.app1.post.videoPost.VideoUploadRequest;
+import com.example.app1.stream.StreamService;
 import com.example.app1.user.AppUser;
 import com.example.app1.user.AppUserRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -31,6 +31,8 @@ public class PostController {
     private FindTeacherService findTeacherService;
     @Autowired
     private VideoContentService videoContentService;
+    @Autowired
+    private StreamService streamService;
 
     @GetMapping(path = "/requestlist")
     public ResponseEntity<List<FindTeacherResponse>> viewAllFindTeacherRequest(){
@@ -41,10 +43,11 @@ public class PostController {
     @PostMapping(path = "/postrequest")
     public ResponseEntity<String> postSkillWantedToLearner(
             @RequestBody FindTeacherRequest request,
-            @RequestHeader("Authorization") String jwtToken
+            @CookieValue(name = "uun") String userName
     ){
+        System.out.println(userName);
 
-        AppUser user = extractUser(jwtToken);
+        AppUser user = extractUser(userName);
 
         return findTeacherService.sendPost(new FindTeacher(
                 request.getHeading(),
@@ -54,6 +57,7 @@ public class PostController {
                 new Date(),
                 user
         ));
+        //return ResponseEntity.ok("5478");
     }
 
 
@@ -85,16 +89,13 @@ public class PostController {
     }
 
 
+    @GetMapping(path = "/video/{videoName}", produces = "video/mp4")
+    public ResponseEntity<Resource> videoS(@PathVariable String videoName){
+        return streamService.getVideo(videoName);
+    }
 
-    private AppUser extractUser(String JWToken){
-        String userName =null;
-        String token =null;
-
-        if (JWToken!=null && JWToken.startsWith("Bearer ")){
-            token =JWToken.substring(7);
-            userName = jwtService.extractUsername(token);
-        }
-
+    private AppUser extractUser(String userName){
+        if (userName==null)return null;
         return userRepo.findByEmail(userName).orElseThrow();
     }
 }
