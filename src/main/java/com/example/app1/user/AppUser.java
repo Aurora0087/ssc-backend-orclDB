@@ -23,6 +23,7 @@ public class AppUser implements UserDetails{
     @SequenceGenerator(
             name = "app_user_sequence",
             sequenceName = "app_user_sequence",
+            initialValue = 1000,
             allocationSize = 1
     )
     @Id

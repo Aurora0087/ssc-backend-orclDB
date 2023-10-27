@@ -3,6 +3,7 @@ package com.example.app1.post.videoPost;
 import com.example.app1.user.UserProfile;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -24,9 +26,11 @@ public class VideoContentService {
     @Autowired
     private VideoContentRepo contentRepo;
 
+
+    //uploading video on local storage
     public String uploadVideo(MultipartFile file) throws IOException {
 
-        String videoService="video/";
+        String videoService= new ClassPathResource("static/video/").getFile().getAbsolutePath();
 
         if (file.isEmpty()){
             return "Please select a file.";
@@ -34,9 +38,9 @@ public class VideoContentService {
 
         String originalFileName = file.getOriginalFilename();
 
-        UUID uid = UUID.randomUUID();
+        String newName = UUID.randomUUID()+originalFileName;
 
-        Path uploadPath = Paths.get(videoService+File.separator+uid+originalFileName);
+        Path uploadPath = Paths.get(videoService+File.separator+newName);
 
         File f=new File(videoService);
         if (!f.exists()){
@@ -45,8 +49,33 @@ public class VideoContentService {
 
         Files.copy(file.getInputStream(),uploadPath);
 
-        return uploadPath.toString();
+        return newName;
     }
+
+    public String uploadThumbnail(MultipartFile img) throws IOException {
+
+        String imgService= new ClassPathResource("static/image/thumbnail").getFile().getAbsolutePath();
+
+        if (img.isEmpty()){
+            return "Please select a file";
+        }
+
+        String originalFileName  =img.getOriginalFilename();
+
+        String newName = UUID.randomUUID()+originalFileName;
+        Path uploadedPath = Paths.get(imgService+File.separator+newName);
+
+        File f=new File(imgService);
+        if (!f.exists()){
+            f.mkdir();
+        }
+
+        Files.copy(img.getInputStream(),uploadedPath);
+
+        return newName;
+    }
+
+
 
     public ResponseEntity<String> postVideoContent(VideoContent content){
 
@@ -65,7 +94,8 @@ public class VideoContentService {
             response.setTitle(videoContent.getTitle());
             response.setDescription(videoContent.getDescription());
             response.setSkill(videoContent.getSkill());
-            response.setVideoUrl(videoContent.getVideoUrl());
+            response.setVideoId(videoContent.getId());
+            response.setThumbnailUrl(videoContent.getThumbnailUrl());
             response.setPostedTime(videoContent.getPostDate());
 
             UserProfile profile=new UserProfile();
@@ -77,6 +107,31 @@ public class VideoContentService {
             contentResponses.add(response);
         }
         return ResponseEntity.status(HttpStatus.OK).body(contentResponses);
+    }
+
+    public ResponseEntity<VideoDetailsResponse> getVideoDetails(Long videoId){
+        try {
+            VideoContent content = contentRepo.findById(videoId).orElseThrow(()->new RuntimeException("error!!"));
+            VideoDetailsResponse response = new VideoDetailsResponse(
+                    content.getTitle(),
+                    content.getDescription(),
+                    content.getSkill(),
+                    content.getPostDate(),
+                    content.getVideoUrl(),
+                    content.getLikes(),
+                    content.getDislikes(),
+                    content.getViews(),
+                    new UserProfile(
+                            content.getUser().getFirstName(),
+                            content.getUser().getLastName(),
+                            content.getUser().getProfileImage()
+                    )
+            );
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
 }
