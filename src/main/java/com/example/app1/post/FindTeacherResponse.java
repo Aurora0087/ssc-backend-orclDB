@@ -14,7 +14,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class FindTeacherResponse {
-    @JsonProperty("header")
+    @JsonProperty("title")
     private String header;
     @JsonProperty("skill")
     private String skill;

@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.concurrent.TimeUnit;
 
-@CrossOrigin(maxAge = 3600)
 @RestController
 @AllArgsConstructor
 public class AuthenticationController {

@@ -12,14 +12,29 @@ public class StreamService {
     @Autowired
     private ResourceLoader loader;
 
-    private static final String format = "classpath:video/%s.mp4";
+    private static final String videoFormat = "classpath:static/video/%s";
 
-    public ResponseEntity<Resource> getVideo(String videoName) {
-        try {
-            Resource videoFile = loader.getResource(String.format(format,videoName));
-        return ResponseEntity.ok().body(videoFile);
+    private static final String thumbnailFormat="classpath:static/image/thumbnail/%s";
+
+    public ResponseEntity<Resource> getFile(String fileName,String fileType) {
+
+        String FORMAT= null;
+        if (fileType=="thumbnail"){
+            FORMAT=thumbnailFormat;
+        } else if (fileType=="video") {
+            FORMAT=videoFormat;
         }
-        catch (Exception e){
+        try {
+            String filePath = String.format(FORMAT, fileName);
+            Resource File = loader.getResource(filePath);
+
+            if (File.exists()) {
+                return ResponseEntity.ok().body(File);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            System.out.println(e);
             return ResponseEntity.notFound().build();
         }
     }

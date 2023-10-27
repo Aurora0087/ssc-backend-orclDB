@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -38,6 +39,7 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
         http
+                .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers(
@@ -45,15 +47,12 @@ public class WebSecurityConfig {
                                 "/error*/**",
                                 "/login",
                                 "/auth/**",
-                                "/register*/**",
-
-                                "/api/video/**"
+                                "/register*/**"
                         )
                         .permitAll()
                         .requestMatchers("/api/admin*/**")
                         .hasAuthority("ADMIN")
                         .requestMatchers("/api/user*/**",
-                                "/api/postrequest*/**",
                                 "/api/requestlist")
                         .hasAuthority("USER")
                         .anyRequest()

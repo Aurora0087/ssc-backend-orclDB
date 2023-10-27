@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter {
@@ -28,6 +29,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
+
         String token =null;
         String userName =null;
 
@@ -37,7 +39,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         }*/
         // Check for the JWT token in an HTTP-only cookie
         Cookie[] cookies = request.getCookies();
-        System.out.println(cookies);
+        System.out.println("cookies = "+ Arrays.toString(request.getCookies()));
         if (cookies != null) {
             for (Cookie cookie : cookies) {
                 if ("token".equals(cookie.getName())) {

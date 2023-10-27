@@ -21,6 +21,7 @@ public class App1Application {
 				registry.addMapping("/**")
 						.allowCredentials(true)
 						.allowedHeaders("*")
+						.maxAge(3600)
 						.allowedOrigins("http://localhost:5173");
 			}
 		};

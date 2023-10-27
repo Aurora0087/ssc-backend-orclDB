@@ -13,7 +13,8 @@ import java.util.Date;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class VideoContentResponse {
+
+public class VideoDetailsResponse {
     @JsonProperty("title")
     private String title;
     @JsonProperty("description")
@@ -22,10 +23,14 @@ public class VideoContentResponse {
     private String skill;
     @JsonProperty("posted-time")
     private Date postedTime;
-    @JsonProperty("video-id")
-    private Long videoId;
-    @JsonProperty("thumbnail-url")
-    private String thumbnailUrl;
+    @JsonProperty("video-url")
+    private String videoUrl;
+    @JsonProperty("likes")
+    private Long likes;
+    @JsonProperty("dislikes")
+    private Long dislike;
+    @JsonProperty("views")
+    private Long views;
     @JsonProperty("profile")
     private UserProfile profile;
 }
