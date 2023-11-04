@@ -7,6 +7,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -85,7 +86,7 @@ public class VideoContentService {
 
     public ResponseEntity<List<VideoContentResponse>> getVideoContents(){
 
-        List<VideoContent> videoContents = contentRepo.findAll();
+        List<VideoContent> videoContents = contentRepo.findByBlockedFalse();
         List<VideoContentResponse> contentResponses = new ArrayList<>();
 
         for (VideoContent videoContent:videoContents){
@@ -112,26 +113,44 @@ public class VideoContentService {
     public ResponseEntity<VideoDetailsResponse> getVideoDetails(Long videoId){
         try {
             VideoContent content = contentRepo.findById(videoId).orElseThrow(()->new RuntimeException("error!!"));
-            VideoDetailsResponse response = new VideoDetailsResponse(
-                    content.getTitle(),
-                    content.getDescription(),
-                    content.getSkill(),
-                    content.getPostDate(),
-                    content.getVideoUrl(),
-                    content.getLikes(),
-                    content.getDislikes(),
-                    content.getViews(),
-                    new UserProfile(
-                            content.getUser().getFirstName(),
-                            content.getUser().getLastName(),
-                            content.getUser().getProfileImage()
-                    )
-            );
-            return ResponseEntity.ok(response);
+
+            if (!content.getBlocked()) {
+                VideoDetailsResponse response = new VideoDetailsResponse(
+                        content.getTitle(),
+                        content.getDescription(),
+                        content.getSkill(),
+                        content.getPostDate(),
+                        content.getVideoUrl(),
+                        content.getLikes(),
+                        content.getDislikes(),
+                        content.getViews(),
+                        new UserProfile(
+                                content.getUser().getFirstName(),
+                                content.getUser().getLastName(),
+                                content.getUser().getProfileImage()
+                        )
+                );
+
+                return ResponseEntity.ok(response);
+            }
+            return ResponseEntity.ok(new VideoDetailsResponse());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
 
+    }
+
+    @Transactional
+    public void increaseLikeCount(Long vid){
+        contentRepo.increaseLikeCount(vid);
+    }
+    @Transactional
+    public void decreaseLikeCount(Long vid){
+        contentRepo.decreaseLikeCount(vid);
+    }
+    @Transactional
+    public void increaseViewCount(Long vid){
+        contentRepo.increaseViewCount(vid);
     }
 
 }

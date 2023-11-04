@@ -53,6 +53,26 @@ public class AppUserService implements UserDetailsService {
         return ResponseEntity.status(HttpStatus.OK).body("User's email change done.");
     }
 
+    public ResponseEntity<UserProfile> profile(String uun){
+        if (isUserExist(uun)){
+            AppUser user = appUserRepo.findByEmail(uun).orElseThrow();
+            UserProfile profile = new UserProfile(
+                    user.getFirstName(),
+                    user.getLastName(),
+                    user.getProfileImage()
+            );
+
+            return ResponseEntity.ok(profile);
+        }
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(new UserProfile());
+    }
+
+    public ResponseEntity<String> updatePassword(String uun, String newPassword){
+
+
+        return null;
+    }
+
 
     //checking is a user exist who has ?email
     public Boolean isUserExist(String email){

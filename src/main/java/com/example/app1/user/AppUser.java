@@ -1,22 +1,20 @@
 package com.example.app1.user;
 
 import jakarta.persistence.*;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 
 
 @Getter
 @Setter
 @NoArgsConstructor
-@EqualsAndHashCode
+@AllArgsConstructor
 @Entity
 public class AppUser implements UserDetails{
 
@@ -39,9 +37,12 @@ public class AppUser implements UserDetails{
     @Column(nullable = false)
     private String password;
     private String profileImage;
+    private Date dob;
 
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
+
+    private Boolean pro;
 
     private Boolean locked;
     private Boolean enabled;
@@ -54,6 +55,7 @@ public class AppUser implements UserDetails{
         this.password = password;
         this.profileImage="https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1";
         this.userRole = userRole;
+        this.pro=false;
         this.locked = false;
         this.enabled =true;
     }

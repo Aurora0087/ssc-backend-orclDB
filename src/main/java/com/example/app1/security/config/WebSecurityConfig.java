@@ -50,7 +50,9 @@ public class WebSecurityConfig {
                                 "/register*/**"
                         )
                         .permitAll()
-                        .requestMatchers("/api/admin*/**")
+                        .requestMatchers("/api/admin*/**",
+                                "/getUserDetails/**",
+                                "/lockUser/**")
                         .hasAuthority("ADMIN")
                         .requestMatchers("/api/user*/**",
                                 "/api/requestlist")

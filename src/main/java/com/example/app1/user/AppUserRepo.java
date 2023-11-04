@@ -22,4 +22,8 @@ public interface AppUserRepo extends JpaRepository<AppUser, Long> {
     @Query("UPDATE AppUser u SET u.email = :newEmail WHERE u.email = :oldEmail")
     void updateEmail(@Param("oldEmail") String oldEmail, @Param("newEmail") String newEmail);
 
+    @Modifying
+    @Query("UPDATE AppUser u SET u.locked = CASE WHEN u.locked = true THEN false ELSE true END WHERE u.email = :uEmail")
+    void lockUser(@Param("uEmail") String uEmail);
+
 }

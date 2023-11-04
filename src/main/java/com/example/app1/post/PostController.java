@@ -1,10 +1,8 @@
 package com.example.app1.post;
 
 import com.example.app1.jwt.JwtService;
-import com.example.app1.post.videoPost.VideoContent;
-import com.example.app1.post.videoPost.VideoContentResponse;
-import com.example.app1.post.videoPost.VideoContentService;
-import com.example.app1.post.videoPost.VideoDetailsResponse;
+import com.example.app1.post.videoPost.*;
+import com.example.app1.post.videoPost.viewerResponse.likes.LikeService;
 import com.example.app1.stream.StreamService;
 import com.example.app1.user.AppUser;
 import com.example.app1.user.AppUserRepo;
@@ -25,8 +23,6 @@ import java.util.List;
 @CrossOrigin
 public class PostController {
 
-    @Autowired
-    private JwtService jwtService;
     @Autowired
     private AppUserRepo userRepo;
     @Autowired
@@ -69,7 +65,8 @@ public class PostController {
             @RequestParam("thumbnail") MultipartFile thumbnail,
             @RequestParam("title") String title,
             @RequestParam("description") String description,
-            @RequestParam("skill") String skill
+            @RequestParam("skill") String skill,
+            @RequestParam("free") String free
     ) throws IOException {
 
         AppUser user = extractUser(userName);
@@ -82,7 +79,8 @@ public class PostController {
                 skill,
                 videoPath,
                 thumbnailPath,
-                user
+                user,
+                Boolean.valueOf(free)
         ));
     }
 

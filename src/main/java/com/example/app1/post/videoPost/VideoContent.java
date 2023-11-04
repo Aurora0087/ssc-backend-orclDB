@@ -35,12 +35,13 @@ public class VideoContent {
     private Long dislikes;
     private Long views;
     private Boolean blocked;
+    private Boolean free;
 
     @ManyToOne
     @JoinColumn(name = "user_id",nullable = false)
     private AppUser user;
 
-    public VideoContent(String title, String description,String skill, String videoUrl, String thumbnailUrl, AppUser user) {
+    public VideoContent(String title, String description,String skill, String videoUrl, String thumbnailUrl, AppUser user, Boolean free) {
         this.title = title;
         this.description = description;
         this.skill = skill;
@@ -52,5 +53,6 @@ public class VideoContent {
         this.views=0L;
         this.user = user;
         this.blocked=false;
+        this.free=free;
     }
 }
